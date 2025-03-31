@@ -62,9 +62,12 @@ def join_network(mac):
             # If join_token is empty docker swarm is not init
             if docker_join_token == "":
                 # wait for execution
-                subprocess.check_output([ "docker", "swarm", "init", f"--advertise-addr={device_ip}" ])
+                try:
+                    subprocess.check_output([ "docker", "swarm", "init", f"--advertise-addr={device_ip}" ])
+                except subprocess.CalledProcessError as e:
+                    print("Swarm already in use")
                 # Store token
-                jtk = subprocess.check_output([ "docker", "swarm", "join-token", "worker", "-q" ], stderr=subprocess.STDOUT)
+                jtk = subprocess.check_output([ "docker", "swarm", "join-token", "worker" ], stderr=subprocess.STDOUT)
                 docker_join_token = jtk.decode("utf-8")
                 with open(join_path, 'w') as jf:
                     jf.write(docker_join_token)
