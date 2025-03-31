@@ -5,6 +5,7 @@ CURRENT_DIR=$(pwd) # /usr/local/bin/docker-selfdiscover
 
 # Update apt repository
 echo "Updating apt repository"
+sudo apt --fix-broken install
 sudo apt update
 sudo apt upgrade -y
 

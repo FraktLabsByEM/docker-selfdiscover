@@ -12,6 +12,6 @@ python listener.py &
 WORKER_TOKEN=$(docker swarm join-token worker -q)
 
 # Update token
-sudo bash -c 'cat > ./resources/join.txt <<EOF
+sudo bash -c 'cat > resources/join.txt <<EOF
 $WORKER_TOKEN
 EOF'
