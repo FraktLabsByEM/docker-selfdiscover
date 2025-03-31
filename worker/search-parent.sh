@@ -44,13 +44,16 @@ for ip in "${IP_ARRAY[@]}"; do
         echo "Uniendose a la red docker"
 
         # Extract token
-        response=$(jq -r '.token' ./config.json)
+        json_res=$(jq -r '.token' ./config.json)
+        response=$(echo "$json_res" | tr '\n' ' ')
         echo "response: $response"
 
+        read -ra parts <<< "$single_line"
+
         # Swarm join token
-        swarm_token=$(echo "$token_field" | sed -n 's/.*docker swarm join --token \([^ ]*\).*/\1/p')
+        swarm_token="${parts[-2]}"
         # Master IP
-        ip_port=$(echo "$token_field" | sed -n 's/.*docker swarm join --token [^ ]* \([^ ]*\).*/\1/p')
+        ip_port="${parts[-1]}"
 
         echo "Extracted data is: $swarm_token $ip_port"
         
