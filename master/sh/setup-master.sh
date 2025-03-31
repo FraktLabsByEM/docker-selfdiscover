@@ -51,6 +51,9 @@ if ! command -v docker &> /dev/null; then
     curl -fsSL https://get.docker.com -o get-docker.sh
     sudo sh get-docker.sh
     sudo rm -f get-docker.sh
+    # Enable docker service
+    sudo systemctl enable docker
+    sudo systemctl start docker
     # Install docker compose
     pip install docker-compose
     sudo docker swarm init

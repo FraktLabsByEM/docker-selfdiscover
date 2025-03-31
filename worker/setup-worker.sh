@@ -1,5 +1,65 @@
 #!/bin/bash
 
+# Update apt repository
+echo "Updating apt repository"
+sudo apt --fix-broken install
+sudo apt update -y
+sudo apt upgrade -y
+sudo apt install -y jq
+
+echo "Setting up conda"
+# Validate conda is installed
+if ! command -v conda &> /dev/null; then
+    echo "Conda no está instalado. Instalando Conda..."
+    
+    # Install conda as root user
+    curl -o miniconda.sh https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-aarch64.sh
+    bash miniconda.sh -u -b -p /root/miniconda3
+    rm miniconda.sh
+    
+    # Update PATH environment variable
+    export PATH="/root/miniconda3/bin:$PATH"
+    
+    echo "Conda instalado correctamente."
+else
+    echo "Conda ya está instalado."
+fi
+
+# Create virtualenv if not exists
+if ! conda info --envs | grep -q "python3.9"; then
+    echo "Entorno Conda 'python3.9' no encontrado. Creando el entorno..."
+    conda create -n python3.9 python=3.9 -y
+    echo "Entorno 'python3.9' creado."
+else
+    echo "El entorno Conda 'python3.9' ya existe."
+fi
+
+# Define conda path
+source /root/miniconda3/etc/profile.d/conda.sh
+# Activate conda env
+conda activate python3.9
+
+echo "Entorno 'python3.9' activado."
+
+
+# Validate and install Docker
+if ! command -v docker &> /dev/null; then
+    # Install docker
+    echo "Docker no esta instalado. Instalando docker..."
+    curl -fsSL https://get.docker.com -o get-docker.sh
+    sudo sh get-docker.sh
+    sudo rm -f get-docker.sh
+    # Enable docker service
+    sudo systemctl enable docker
+    sudo systemctl start docker
+    # Install docker compose
+    pip install docker-compose
+    sudo docker init
+else
+    echo "Docker instalado correctamente"
+fi
+
+
 # Variables
 SCRIPT_NAME="search-parent.sh"
 SERVICE_NAME="search-parent.service"

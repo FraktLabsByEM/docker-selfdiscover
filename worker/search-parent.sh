@@ -41,6 +41,18 @@ for ip in "${IP_ARRAY[@]}"; do
         # Guardar la respuesta en un archivo local
         cp response.json ./config.json
         echo "Respuesta guardada en config.json"
+        echo "Uniendose a la red docker"
+
+        # Extract token
+        response=$(jq -r '.token' ./config.json)
+        echo "response: $response"
+
+        # Swarm join token
+        swarm_token=$(echo "$token_field" | sed -n 's/.*docker swarm join --token \([^ ]*\).*/\1/p')
+        # Master IP
+        ip_port=$(echo "$token_field" | sed -n 's/.*docker swarm join --token [^ ]* \([^ ]*\).*/\1/p')
+
+        echo "Extracted data is: $swarm_token $ip_port"
         
         # Break the loop if the request is successful
         break
