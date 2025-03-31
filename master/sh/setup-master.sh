@@ -91,7 +91,30 @@ sudo systemctl start listener.service
 
 echo "Configuración completada. El servidor se ejecutará automáticamente al iniciar el dispositivo."
 
-# Add file permissions for resources
+# Add files and permisions permissions for resources
+# Directorio de resources
+RESOURCES_DIR="$CURRENT_DIR/master/resources"
+
+# Si la carpeta no existe, se crea
+if [ ! -d "$RESOURCES_DIR" ]; then
+    echo "El directorio $RESOURCES_DIR no existe. Creándolo..."
+    mkdir -p "$RESOURCES_DIR"
+fi
+
+# Archivos a validar/crear
+if [ ! -f "$RESOURCES_DIR/token.txt"]; do
+    echo "El archivo token.txt. no existe, generando..."
+    echo "my_custom_password" > "$RESOURCES_DIR/token.txt"
+done
+if [ ! -f "$RESOURCES_DIR/join.txt"]; do
+    echo "El archivo join.txt. no existe, generando..."
+    echo "my_custom_swarm_token" > "$RESOURCES_DIR/join.txt"
+done
+if [ ! -f "$RESOURCES_DIR/whitelist.txt"]; do
+    echo "El archivo whitelist.txt. no existe, generando..."
+    echo "20:20:20:20:20:20" > "$RESOURCES_DIR/whitelist.txt"
+done
+
 
 # Add execution permission
 chmod +x "$CURRENT_DIR/master/sh/init.sh"
