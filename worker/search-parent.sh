@@ -1,6 +1,6 @@
 #!/bin/bash
 
-sleep 90s
+sleep 5s
 
 # Retrieve mac address
 MAC_ADDRESS=$(ip link show | awk '/ether/ {print $2; exit}')
@@ -15,6 +15,13 @@ NETWORK_PREFIX=$(echo $IP_ADDRESS | awk -F. '{print $1 "." $2 "." $3}')
 SCAN_RESULTS=$(nmap -sn $NETWORK_PREFIX.0/24 | grep "Nmap scan report for" | awk '{print $5}')
 IP_ARRAY=($SCAN_RESULTS)
 
+echo "List of devices found in the same network:"
+
+for ip in "${IP_ARRAY[@]}"; do
+    echo " - $ip"
+done
+
+
 # Loop through each IP in the array and send the POST request
 for ip in "${IP_ARRAY[@]}"; do
     echo "intentando conectar con $ip"
@@ -25,7 +32,7 @@ for ip in "${IP_ARRAY[@]}"; do
     }'
 
     # Send POST request with application/json header and the data
-    RESPONSE=$(curl -s -w "%{http_code}" -o response.json -X POST $URL -H "Content-Type: application/json" -d "$DATA")
+    RESPONSE=$(curl -m 5 -s -w "%{http_code}" -o response.json -X POST $URL -H "Content-Type: application/json" -d "$DATA")
     
     # Check if the response code is 200
     if [[ "$RESPONSE" -eq 200 ]]; then
