@@ -102,18 +102,18 @@ if [ ! -d "$RESOURCES_DIR" ]; then
 fi
 
 # Archivos a validar/crear
-if [ ! -f "$RESOURCES_DIR/token.txt"]; do
+if [ ! -f "$RESOURCES_DIR/token.txt"]; then
     echo "El archivo token.txt. no existe, generando..."
     echo "my_custom_password" > "$RESOURCES_DIR/token.txt"
-done
-if [ ! -f "$RESOURCES_DIR/join.txt"]; do
+fi
+if [ ! -f "$RESOURCES_DIR/join.txt"]; then
     echo "El archivo join.txt. no existe, generando..."
     echo "my_custom_swarm_token" > "$RESOURCES_DIR/join.txt"
-done
-if [ ! -f "$RESOURCES_DIR/whitelist.txt"]; do
+fi
+if [ ! -f "$RESOURCES_DIR/whitelist.txt"]; then
     echo "El archivo whitelist.txt. no existe, generando..."
     echo "20:20:20:20:20:20" > "$RESOURCES_DIR/whitelist.txt"
-done
+fi
 
 
 # Add execution permission
