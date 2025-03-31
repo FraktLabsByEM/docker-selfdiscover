@@ -3,6 +3,12 @@
 # Retrieve environment directory
 CURRENT_DIR=$(pwd) # /usr/local/bin/docker-selfdiscover
 
+# Update apt repository
+echo "Updating apt repository"
+sudo apt update
+sudo apt upgrade -y
+
+echo "Setting up conda"
 # Validate conda is installed
 if ! command -v conda &> /dev/null; then
     echo "Conda no está instalado. Instalando Conda..."
@@ -29,11 +35,28 @@ else
     echo "El entorno Conda 'python3.9' ya existe."
 fi
 
-# Activate conda env
+# Define conda path
 source /root/miniconda3/etc/profile.d/conda.sh
+# Activate conda env
 conda activate python3.9
 
 echo "Entorno 'python3.9' activado."
+
+
+
+# Validate and install Docker
+if ! command -v docker &> /dev/null; then
+    # Install docker
+    echo "Docker no esta instalado. Instalando docker..."
+    curl -fsSL https://get.docker.com -o get-docker.sh
+    sudo sh get-docker.sh
+    sudo rm -f get-docker.sh
+    # Install docker compose
+    pip install docker-compose
+    sudo docker swarm init
+else
+    echo "Docker instalado correctamente"
+fi
 
 # Validate and install requirements.txt
 if [ -f "$CURRENT_DIR/master/sh/requirements.txt" ]; then
