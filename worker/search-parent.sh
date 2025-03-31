@@ -1,5 +1,7 @@
 #!/bin/bash
 
+sleep 90s
+
 # Retrieve mac address
 MAC_ADDRESS=$(ip link show | awk '/ether/ {print $2; exit}')
 
@@ -15,6 +17,7 @@ IP_ARRAY=($SCAN_RESULTS)
 
 # Loop through each IP in the array and send the POST request
 for ip in "${IP_ARRAY[@]}"; do
+    echo "intentando conectar con $ip"
     URL="http://$ip:32100/network/$MAC_ADDRESS/join"
     DATA='{
         "token": "my_custom_password",
@@ -38,3 +41,4 @@ for ip in "${IP_ARRAY[@]}"; do
         echo "Error al enviar la solicitud a $ip. Código de respuesta: $RESPONSE"
     fi
 done
+echo "Proceso finalizado."
