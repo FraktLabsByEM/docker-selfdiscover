@@ -43,7 +43,6 @@ conda activate python3.9
 echo "Entorno 'python3.9' activado."
 
 
-
 # Validate and install Docker
 if ! command -v docker &> /dev/null; then
     # Install docker
@@ -67,7 +66,7 @@ else
 fi
 
 # Create service (as root) providing conda environment variables
-sudo bash -c 'cat > /etc/systemd/system/listener.service <<EOF
+sudo bash -c "cat > /etc/systemd/system/listener.service <<EOF
 [Unit]
 Description=FraktLabs Listener Service
 After=network.target
@@ -85,7 +84,7 @@ Environment=CONDA_PYTHON_EXE=/root/miniconda3/bin/python
 
 [Install]
 WantedBy=multi-user.target
-EOF'
+EOF"
 sudo systemctl enable listener.service
 sudo systemctl start listener.service
 
@@ -95,24 +94,32 @@ echo "Configuración completada. El servidor se ejecutará automáticamente al i
 # Directorio de resources
 RESOURCES_DIR="$CURRENT_DIR/master/resources"
 
-# Si la carpeta no existe, se crea
+# Create folder if not exists
 if [ ! -d "$RESOURCES_DIR" ]; then
     echo "El directorio $RESOURCES_DIR no existe. Creándolo..."
     mkdir -p "$RESOURCES_DIR"
 fi
 
-# Archivos a validar/crear
+# Validate and create files
 if [ ! -f "$RESOURCES_DIR/token.txt"]; then
     echo "El archivo token.txt. no existe, generando..."
-    echo "my_custom_password" > "$RESOURCES_DIR/token.txt"
+    sudo bash -c "cat > $RESOURCES_DIR/token.txt <<EOF
+my_custom_password
+EOF"
 fi
+
 if [ ! -f "$RESOURCES_DIR/join.txt"]; then
     echo "El archivo join.txt. no existe, generando..."
-    echo "my_custom_swarm_token" > "$RESOURCES_DIR/join.txt"
+    sudo bash -c "cat > $RESOURCES_DIR/join.txt <<EOF
+my_custom_swarm_token
+EOF"
 fi
+
 if [ ! -f "$RESOURCES_DIR/whitelist.txt"]; then
     echo "El archivo whitelist.txt. no existe, generando..."
-    echo "20:20:20:20:20:20" > "$RESOURCES_DIR/whitelist.txt"
+    sudo bash -c "cat > $RESOURCES_DIR/whitelist.txt <<EOF
+20:20:20:20:20:20
+EOF"
 fi
 
 
