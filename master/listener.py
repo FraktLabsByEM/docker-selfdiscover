@@ -1,3 +1,4 @@
+import subprocess
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 
@@ -14,8 +15,8 @@ whitelist_path = './resources/whitelist.txt'
 def token_validation(token):
     # Validate token by comparing with configured token in token.txt
     try:
-        with open(token_path, 'r') as token_file:
-            configured_token = token_file.read().strip()
+        with open(token_path, 'r') as tf:
+            configured_token = tf.read().strip()
     except FileNotFoundError:
         return None
     return token == configured_token
@@ -56,8 +57,17 @@ def join_network(mac):
 
     # Return response with the Docker join token and device IP
     try:
-        with open(join_path, 'r') as join_file:
-            docker_join_token = join_file.read().strip()
+        with open(join_path, 'r') as jf:
+            docker_join_token = jf.read().strip()
+            # If join_token is empty docker swarm is not init
+            if docker_join_token == "":
+                # wait for execution
+                subprocess.check_output([ "docker", "swarm", "init", f"--advertise-addr={device_ip}" ])
+                # Store token
+                jtk = subprocess.check_output([ "docker", "swarm", "join-token", "worker", "-q" ], stderr=subprocess.STDOUT)
+                docker_join_token = jtk.decode("utf-8")
+                with open(join_path, 'w') as jf:
+                    jf.write(docker_join_token)
     except FileNotFoundError:
         return jsonify({"error": "Join token not found"}), 500
 
@@ -99,8 +109,8 @@ def add_to_whitelist(mac):
 
     # Add MAC address to the whitelist file
     try:
-        with open(whitelist_path, 'a') as whitelist_file:
-            whitelist_file.write(mac + "\n")
+        with open(whitelist_path, 'a') as wlf:
+            wlf.write(mac + "\n")
     except FileNotFoundError:
         return jsonify({"error": "Whitelist file not found"}), 500
 
@@ -139,14 +149,14 @@ def remove_from_whitelist(mac):
 
     # Remove MAC address from whitelist file
     try:
-        with open(whitelist_path, 'r') as whitelist_file:
-            whitelist = whitelist_file.readlines()
+        with open(whitelist_path, 'r') as wlf:
+            whitelist = wlf.readlines()
         
         # Remove the MAC address from the list
-        with open(whitelist_path, 'w') as whitelist_file:
+        with open(whitelist_path, 'w') as wlf:
             for line in whitelist:
                 if line.strip() != mac:
-                    whitelist_file.write(line)
+                    wlf.write(line)
         
     except FileNotFoundError:
         return jsonify({"error": "Whitelist file not found"}), 500
@@ -192,9 +202,9 @@ def set_whitelist():
 
     # Write the whitelist to the file
     try:
-        with open(whitelist_path, 'w') as whitelist_file:
+        with open(whitelist_path, 'w') as wlf:
             for mac in whitelist:
-                whitelist_file.write(mac + "\n")
+                wlf.write(mac + "\n")
     except FileNotFoundError:
         return jsonify({"error": "Whitelist file not found"}), 500
 
@@ -215,8 +225,8 @@ def update_docker_token(join_token):
 
     # Update the join token in join.txt
     try:
-        with open(join_path, 'w') as join_file:
-            join_file.write(join_token + "\n")
+        with open(join_path, 'w') as jf:
+            jf.write(join_token + "\n")
     except FileNotFoundError:
         return jsonify({"error": "join.txt file not found"}), 500
 
@@ -240,8 +250,8 @@ def update_token():
     
     # Update the join token in join.txt
     try:
-        with open(token_path, 'w') as join_file:
-            join_file.write(token + "\n")
+        with open(token_path, 'w') as tf:
+            tf.write(token + "\n")
     except FileNotFoundError:
         return jsonify({"error": "token.txt file not found"}), 500
 
@@ -249,4 +259,6 @@ def update_token():
 
 
 if __name__ == '__main__':
+    with open(join_path, 'w') as jf:
+        jf.write("")
     app.run(host='0.0.0.0', port=32100, debug=True)
