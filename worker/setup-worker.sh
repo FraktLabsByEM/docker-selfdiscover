@@ -6,6 +6,9 @@ SERVICE_NAME="search-parent.service"
 SERVICE_PATH="/etc/systemd/system/$SERVICE_NAME"
 SCRIPT_PATH="$(pwd)/worker/$SCRIPT_NAME"
 
+NMAP_LOCATION=$(which nmap)
+CURL_LOCATION=$(which curl)
+
 # Verificar si el script existe
 if [[ ! -f "$SCRIPT_PATH" ]]; then
     echo "El script $SCRIPT_NAME no se encuentra en el directorio actual."
@@ -26,14 +29,15 @@ After=network.target
 
 [Service]
 ExecStart=/usr/bin/bash $SCRIPT_PATH
+WorkingDirectory=$(pwd)/worker
 Restart=always
 User=root    # Running the service as root
 Group=root   # Running the service as root group
-WorkingDirectory=$(pwd)/worker
 StandardOutput=syslog
 StandardError=syslog
 SyslogIdentifier=$SERVICE_NAME
-Environment=PATH=$PATH:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/root/miniconda3/bin
+Environment=PATH=$PATH:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/root/miniconda3/bin:$NMAP_LOCATION:$CURL_LOCATION
+
 
 [Install]
 WantedBy=multi-user.target
