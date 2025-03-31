@@ -101,21 +101,21 @@ if [ ! -d "$RESOURCES_DIR" ]; then
 fi
 
 # Validate and create files
-if [ ! -f "$RESOURCES_DIR/token.txt"]; then
+if [ ! -f "$RESOURCES_DIR/token.txt" ]; then
     echo "El archivo token.txt. no existe, generando..."
     sudo bash -c "cat > $RESOURCES_DIR/token.txt <<EOF
 my_custom_password
 EOF"
 fi
 
-if [ ! -f "$RESOURCES_DIR/join.txt"]; then
+if [ ! -f "$RESOURCES_DIR/join.txt" ]; then
     echo "El archivo join.txt. no existe, generando..."
     sudo bash -c "cat > $RESOURCES_DIR/join.txt <<EOF
 my_custom_swarm_token
 EOF"
 fi
 
-if [ ! -f "$RESOURCES_DIR/whitelist.txt"]; then
+if [ ! -f "$RESOURCES_DIR/whitelist.txt" ]; then
     echo "El archivo whitelist.txt. no existe, generando..."
     sudo bash -c "cat > $RESOURCES_DIR/whitelist.txt <<EOF
 20:20:20:20:20:20
