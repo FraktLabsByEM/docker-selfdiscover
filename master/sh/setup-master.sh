@@ -11,7 +11,7 @@ sudo apt upgrade -y
 
 echo "Setting up conda"
 # Validate conda is installed
-if ! command -v conda &> /dev/null; then
+if ! which conda &> /dev/null; then
     echo "Conda no está instalado. Instalando Conda..."
     
     # Install conda as root user
@@ -45,7 +45,7 @@ echo "Entorno 'python3.9' activado."
 
 
 # Validate and install Docker
-if ! command -v docker &> /dev/null; then
+if ! which docker &> /dev/null; then
     # Install docker
     echo "Docker no esta instalado. Instalando docker..."
     curl -fsSL https://get.docker.com -o get-docker.sh
