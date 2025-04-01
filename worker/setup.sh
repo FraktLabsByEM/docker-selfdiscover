@@ -100,7 +100,8 @@ After=network.target
 [Service]
 ExecStart=/usr/bin/bash $SCRIPT_PATH
 WorkingDirectory=$(pwd)/worker
-Restart=always
+Restart=on-failure
+RestartSec=20
 User=root
 Group=root
 StandardOutput=syslog

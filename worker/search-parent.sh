@@ -63,9 +63,10 @@ for ip in "${IP_ARRAY[@]}"; do
         sudo docker swarm join --token $swarm_token $ip_port
         
         # Break the loop if the request is successful
-        break
+        exit 0
     else
         echo "Error al enviar la solicitud a $ip. Código de respuesta: $RESPONSE"
+        exit 1
     fi
 done
 echo "Proceso finalizado."
