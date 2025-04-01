@@ -2,6 +2,8 @@
 
 sleep 5s
 
+rm -f config.json
+
 # Retrieve mac address
 MAC_ADDRESS=$(ip link show | awk '/ether/ {print $2; exit}')
 
@@ -41,13 +43,17 @@ for ip in "${IP_ARRAY[@]}"; do
         # Guardar la respuesta en un archivo local
         cp response.json ./config.json
         echo "Respuesta guardada en config.json"
-        echo "Uniendose a la red docker"
 
-        # Extract token
+        # Extract token and ip
         swarm_token=$(jq -r '.token' ./config.json)
         ip_port=$(jq -r '.ip' ./config.json)
 
-        echo "Extracted data is: $swarm_token $ip_port"
+        # Join network
+        sudo docker swarm left --force
+        sleep 2s
+        
+        echo "Uniendose a la red docker en la ip: $ip_port"
+        sudo docker swarm join --token $swarm_token $ip_port
         
         # Break the loop if the request is successful
         break
