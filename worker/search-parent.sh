@@ -69,3 +69,4 @@ for ip in "${IP_ARRAY[@]}"; do
     fi
 done
 echo "Proceso finalizado."
+exit 1

@@ -137,3 +137,6 @@ echo ""
 
 [ "$lang" = "en" ] && echo "  Press enter to exit..." || echo "  Presione enter para salir..."
 read doomie
+
+sudo systemctl daemon-reload
+sudo systemctl restart $SERVICE_NAME
