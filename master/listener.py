@@ -60,7 +60,7 @@ def join_network(mac):
         with open(join_path, 'r') as jf:
             docker_join_token = jf.read().strip()
             # If join_token is empty docker swarm is not init
-            if docker_join_token == "":
+            if not docker_join_token:
                 # wait for execution
                 try:
                     subprocess.check_output([ "docker", "swarm", "init", f"--advertise-addr={device_ip}" ])
@@ -68,15 +68,19 @@ def join_network(mac):
                     print("Swarm already in use")
                 # Store token
                 jtk = subprocess.check_output([ "docker", "swarm", "join-token", "worker" ], stderr=subprocess.STDOUT)
-                docker_join_token = jtk.decode("utf-8")
+                docker_join_token = jtk.decode("utf-8").strip()
                 with open(join_path, 'w') as jf:
                     jf.write(docker_join_token)
     except FileNotFoundError:
         return jsonify({"error": "Join token not found"}), 500
 
+    docker_join_token = docker_join_token.split()
+    tkn = docker_join_token[-2]
+    ip_port = docker_join_token[-1]
+    
     return jsonify({
-        "token": docker_join_token,
-        "ip": device_ip
+        "token": tkn,
+        "ip": ip_port
     })
 
 
