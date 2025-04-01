@@ -66,7 +66,6 @@ for ip in "${IP_ARRAY[@]}"; do
         exit 0
     else
         echo "Error al enviar la solicitud a $ip. Código de respuesta: $RESPONSE"
-        exit 1
     fi
 done
 echo "Proceso finalizado."
