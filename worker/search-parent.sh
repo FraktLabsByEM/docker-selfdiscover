@@ -49,9 +49,9 @@ for ip in "${IP_ARRAY[@]}"; do
         ip_port=$(jq -r '.ip' ./config.json)
 
         # Join network
-        sudo docker swarm left --force
+        sudo docker swarm leave --force
         sleep 2s
-        
+
         echo "Uniendose a la red docker en la ip: $ip_port"
         sudo docker swarm join --token $swarm_token $ip_port
         
