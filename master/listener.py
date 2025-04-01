@@ -77,10 +77,12 @@ def join_network(mac):
     docker_join_token = docker_join_token.split()
     tkn = docker_join_token[-2]
     ip_port = docker_join_token[-1]
+    ip_port = ip_port.split(":")
+    ip_port = ip_port[-1]
     
     return jsonify({
         "token": tkn,
-        "ip": ip_port
+        "ip": f"{device_ip}:{ip_port}"
     })
 
 
