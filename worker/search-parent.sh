@@ -49,11 +49,12 @@ for ip in "${IP_ARRAY[@]}"; do
         echo "response: $response"
 
         read -ra parts <<< "$single_line"
+        N=${#parts[@]}
 
         # Swarm join token
-        swarm_token="${parts[-2]}"
+        swarm_token="${parts[$((N-2))]}"
         # Master IP
-        ip_port="${parts[-1]}"
+        ip_port="${parts[$((N-1))]}"
 
         echo "Extracted data is: $swarm_token $ip_port"
         
