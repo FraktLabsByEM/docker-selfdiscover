@@ -23,13 +23,20 @@ for ip in "${IP_ARRAY[@]}"; do
     echo " - $ip"
 done
 
+# Load network password
+if [ -f "./network_password.txt" ]; then
+    NETWORK_PASSWORD=$(cat ./network_password.txt)
+else
+    echo "Error: No se encontró el archivo de contraseña en ./network_password.txt"
+    exit 1
+fi
 
 # Loop through each IP in the array and send the POST request
 for ip in "${IP_ARRAY[@]}"; do
     echo "intentando conectar con $ip"
     URL="http://$ip:32100/network/$MAC_ADDRESS/join"
     DATA='{
-        "token": "my_custom_password",
+        "token":  "'$NETWORK_PASSWORD'",
         "req_ip": "'$ip'"
     }'
 
