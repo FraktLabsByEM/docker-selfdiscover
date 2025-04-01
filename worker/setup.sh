@@ -121,14 +121,14 @@ sudo systemctl start $SERVICE_NAME
 [ "$lang" = "en" ] && echo "  Set up network authentication" || echo "  Configurar autenticación de red"
 
 echo ""
-[ "$lang" = "en" ] && echo "Enter a password for network authentication:" || echo "Ingrese una contraseña para la autenticación de red:"
-read -s network_password
+[ "$lang" = "en" ] && echo "Enter the configured password in the master node setup:" || echo "Ingrese la contraseña configurada en la instalación del nodo master:"
+read network_password
 
 # Save password securely
-echo "$network_password" > /worker/network_password.txt
-chmod 600 /worker/network_password.txt
+echo "$network_password" > "$(pwd)/worker/network_password.txt"
+chmod 600 "$(pwd)/worker/network_password.txt"
 
-[ "$lang" = "en" ] && echo "  Password has been set and saved securely" || echo "  La contraseña ha sido configurada y guardada de forma segura"
+[ "$lang" = "en" ] && echo "  Password has been set and saved" || echo "  La contraseña ha sido configurada y guardada"
 
 echo ""
 echo ""
