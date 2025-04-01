@@ -1,5 +1,5 @@
 #!/bin/bash
-# | tail -n 5 | less -S
+#
 
 echo "Please select a language | Por favor seleccione un idioma (en/es):"
 read lang
@@ -8,10 +8,10 @@ read lang
 [ "$lang" = "en" ] && echo "  Update apt repository" || echo "  Actualizando el repositorio apt"
 
 # Update apt repository
-sudo apt --fix-broken install | tail -n 5 | less -S
-sudo apt update -y | tail -n 5 | less -S
-sudo apt upgrade -y | tail -n 5 | less -S
-sudo apt install -y jq nmap curl | tail -n 5 | less -S
+sudo apt --fix-broken install
+sudo apt update -y
+sudo apt upgrade -y
+sudo apt install -y jq nmap curl
 
 
 [ "$lang" = "en" ] && echo "Step 2/6" || echo "Paso 2/6"
@@ -21,9 +21,9 @@ if ! which conda &> /dev/null; then
     [ "$lang" = "en" ] && echo "  conda is not installed, setting up conda" || echo "  conda no está instalado, configurando conda"
     
     # Install conda as root user
-    curl -o miniconda.sh https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-aarch64.sh | tail -n 5 | less -S
-    bash miniconda.sh -u -b -p /root/miniconda3 | tail -n 5 | less -S
-    rm miniconda.sh | tail -n 5 | less -S
+    curl -o miniconda.sh https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-aarch64.sh
+    bash miniconda.sh -u -b -p /root/miniconda3
+    rm miniconda.sh
     
     # Update PATH environment variable
     export PATH="/root/miniconda3/bin:$PATH"
@@ -36,7 +36,7 @@ fi
 # Create virtualenv if not exists
 if ! conda info --envs | grep -q "python3.9"; then
     [ "$lang" = "en" ] && echo "  conda environment not created yet" || echo "  El entorno conda no se ha creado aún"
-    conda create -n python3.9 python=3.9 -y | tail -n 5 | less -S
+    conda create -n python3.9 python=3.9 -y
     [ "$lang" = "en" ] && echo "  conda environment have been created" || echo "  El entorno conda se ha creado exitosamente"
 else
     [ "$lang" = "en" ] && echo "  conda environment is already created" || echo "  El entorno conda ya existe"
@@ -57,14 +57,14 @@ conda activate python3.9
 if ! which docker &> /dev/null; then
     # Install docker
     [ "$lang" = "en" ] && echo "  docker is not installed, setting up docker" || echo "  docker no está instalado, configurando docker"
-    curl -fsSL https://get.docker.com -o get-docker.sh | tail -n 5 | less -S
-    sudo sh get-docker.sh | tail -n 5 | less -S
+    curl -fsSL https://get.docker.com -o get-docker.sh
+    sudo sh get-docker.sh
     sudo rm -f get-docker.sh
     # Enable docker service
     sudo systemctl enable docker
     sudo systemctl start docker
     # Install docker compose
-    pip install docker-compose | tail -n 5 | less -S
+    pip install docker-compose
     [ "$lang" = "en" ] && echo "  docker have been installed correctly" || echo "  docker se instaló correctamente"
 else
     [ "$lang" = "en" ] && echo "  docker is already installed" || echo "  docker ya se encuentra instalado"

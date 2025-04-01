@@ -397,7 +397,11 @@ Make sure to follow coding best practices and perform tests before submitting a 
 
 # 8. ToDo:  
 
-- API - Worker Node  
+- Add other architectures support
+- Validate tail crop
+- API - Master node (node management features)
+- API - Worker Node 
+- Web interface
 - Dashboard Manager  
 - Dashboard Worker  
 

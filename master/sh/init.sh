@@ -6,7 +6,7 @@ conda activate python3.9
 echo "Conda environment activated"
 
 # Remove inactive nodes
-docker node ls | grep -i Down | awk '{print $1}' | xargs -r docker node rm | tail -n 5 | less -S
+docker node ls | grep -i Down | awk '{print $1}' | xargs -r docker node rm
 echo "Inactive worker nodes have been removed"
 
 # Update token

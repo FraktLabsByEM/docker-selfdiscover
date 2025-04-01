@@ -389,6 +389,10 @@ Asegúrate de seguir las buenas prácticas de codificación y realizar pruebas a
 
 # 8. ToDo:
 
-- API - Nodo Worker
-- Dashboard Manager
-- Dashboard Worker
+- Agregar soporte para otras arquitecturas
+- Validar recorte de log
+- API - Master node (node management features)
+- API - Worker Node 
+- Web interface
+- Dashboard Manager  
+- Dashboard Worker  
