@@ -1,6 +1,4 @@
-Claro, aquí tienes la traducción al inglés de la documentación:
 
----
 
 # Docker Self Discover
 
