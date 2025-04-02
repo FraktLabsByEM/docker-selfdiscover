@@ -24,7 +24,8 @@ def token_validation(token):
 
 def update_ip(name, ip):
     # File path, on desktop for easy access
-    file_path = os.path.join(os.path.expanduser("~"), "Desktop", "docker-nodes.txt")
+    home_path = f"/home/{os.getenv("SUDO_USER")}" if os.getenv("SUDO_USER") else os.path.expanduser("~")
+    file_path = os.path.join(home_path, "Desktop", "docker-nodes.txt")
     # If not created yet
     if not os.path.exists(file_path):
         with open(file_path, "w") as file:
@@ -95,6 +96,8 @@ def join_network(mac):
                 found = True
     # Invisible return
     if not found:
+        print(f"Not recognized mac: {mac}")
+        print("Aborting to keep cluster safe.")
         abort(404)
 
     # Retrieve ip from request
