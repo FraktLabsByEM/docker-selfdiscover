@@ -100,7 +100,8 @@ After=network.target
 [Service]
 ExecStart=/usr/bin/bash $SCRIPT_PATH
 WorkingDirectory=$(pwd)/worker
-Restart=always
+Restart=on-failure
+RestartSec=20
 User=root
 Group=root
 StandardOutput=syslog
@@ -137,3 +138,6 @@ echo ""
 
 [ "$lang" = "en" ] && echo "  Press enter to exit..." || echo "  Presione enter para salir..."
 read doomie
+
+sudo systemctl daemon-reload
+sudo systemctl restart $SERVICE_NAME

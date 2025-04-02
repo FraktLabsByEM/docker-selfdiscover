@@ -179,3 +179,6 @@ chmod 666 "$CURRENT_DIR/master/resources/whitelist.txt"
 
 [ "$lang" = "en" ] && echo "  Press enter to exit..." || echo "  Presione enter para salir..."
 read doomie
+
+sudo systemctl daemon-reload
+sudo systemctl restart listener.service
