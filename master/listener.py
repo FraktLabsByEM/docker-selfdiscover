@@ -1,5 +1,6 @@
+import os
 import subprocess
-from flask import Flask, request, jsonify
+from flask import Flask, request, abort, jsonify
 from flask_cors import CORS
 
 
@@ -20,6 +21,38 @@ def token_validation(token):
     except FileNotFoundError:
         return None
     return token == configured_token
+
+def update_ip(name, ip):
+    # File path, on desktop for easy access
+    file_path = os.path.join(os.path.expanduser("~"), "Desktop", "docker-nodes.txt")
+    # If not created yet
+    if not os.path.exists(file_path):
+        with open(file_path, "w") as file:
+            file.write(f"{name}: {ip}")
+        return
+    # Update created file
+    else:
+        with open(file_path, "r+") as file:
+            lines = file.readlines() # Read lines
+            file.seek(0) 
+            found = False
+            
+            # Seek for a match
+            for line in lines:
+                if line.startswith(f"{name}:"):
+                    file.write(f"{name}: {ip}\n")  # Update line
+                    found = True
+                else:
+                    file.write(line)  # Keep other lines
+            
+            if not found:
+                file.write(f"{name}: {ip}\n")  # Add new ip
+            
+            file.truncate()  # Delete extra content
+
+        print("IP updated.")
+        
+    
     
 
 @app.route('/network/<string:mac>/join', methods=["POST"])
@@ -51,9 +84,23 @@ def join_network(mac):
     # Validate MAC address (simple validation)
     if len(mac.split(":")) != 6:
         return jsonify({"error": "Invalid MAC address format"}), 400
+    
+    # Validate whitelist
+    with open(whitelist_path, "r") as whl:
+        lines = whl.readlines()
+        found = False
+        # Check whitelist
+        for line in lines:
+            if line.startswith(mac):
+                found = True
+    # Invisible return
+    if not found:
+        abort(404)
 
     # Retrieve ip from request
-    device_ip = req["req_ip"]
+    target_ip = req["target"]
+    dev_ip = req["source"]
+    dev_name = req["name"]
 
     # Return response with the Docker join token and device IP
     try:
@@ -63,7 +110,7 @@ def join_network(mac):
             if not docker_join_token:
                 # wait for execution
                 try:
-                    subprocess.check_output([ "docker", "swarm", "init", f"--advertise-addr={device_ip}" ])
+                    subprocess.check_output([ "docker", "swarm", "init", f"--advertise-addr={target_ip}" ])
                 except subprocess.CalledProcessError as e:
                     print("Swarm already in use")
                 # Store token
@@ -80,9 +127,12 @@ def join_network(mac):
     ip_port = ip_port.split(":")
     ip_port = ip_port[-1]
     
+    # Update device ip
+    update_ip(dev_name, dev_ip)
+    
     return jsonify({
         "token": tkn,
-        "ip": f"{device_ip}:{ip_port}"
+        "ip": f"{target_ip}:{ip_port}"
     })
 
 
