@@ -37,7 +37,9 @@ for ip in "${IP_ARRAY[@]}"; do
     URL="http://$ip:32100/network/$MAC_ADDRESS/join"
     DATA='{
         "token":  "'$NETWORK_PASSWORD'",
-        "req_ip": "'$ip'"
+        "target": "'$ip'",
+        "source": "'$IP_ADDRESS'",
+        "name": "'$(uname -n)'"
     }'
 
     # Send POST request with application/json header and the data
