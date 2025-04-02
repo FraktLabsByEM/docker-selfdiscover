@@ -1,1 +1,4 @@
 /master/resources/*
+/worker/config.json
+/worker/response.json
+/worker/password.txt
