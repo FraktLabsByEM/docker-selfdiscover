@@ -24,7 +24,7 @@ def token_validation(token):
 
 def update_ip(name, ip):
     # File path, on desktop for easy access
-    home_path = f"/home/{os.getenv("SUDO_USER")}" if os.getenv("SUDO_USER") else os.path.expanduser("~")
+    home_path = f"/home/{os.getenv('SUDO_USER')}" if os.getenv("SUDO_USER") else os.path.expanduser("~")
     file_path = os.path.join(home_path, "Desktop", "docker-nodes.txt")
     # If not created yet
     if not os.path.exists(file_path):
